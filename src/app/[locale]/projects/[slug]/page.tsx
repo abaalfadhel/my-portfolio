@@ -1,0 +1,8 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { projects } from '@/content/projects';
+import { getCopy,isLocale,locales } from '@/lib/i18n';
+export function generateStaticParams(){return locales.flatMap(locale=>projects.map(project=>({locale,slug:project.slug})));}
+export async function generateMetadata({params}:{params:Promise<{locale:string;slug:string}>}):Promise<Metadata>{const {locale,slug}=await params;if(!isLocale(locale))return {};const project=projects.find(p=>p.slug===slug);return project?{title:project.title[locale]}:{};}
+export default async function ProjectDetail({params}:{params:Promise<{locale:string;slug:string}>}){const {locale:raw,slug}=await params;if(!isLocale(raw))notFound();const project=projects.find(p=>p.slug===slug);if(!project)notFound();const t=getCopy(raw),en=raw==='en';return <div className="page-shell"><article className="project-detail"><Link href={`/${raw}/projects`} className="back-link">← {t.back}</Link><header className="detail-hero"><p className="eyebrow">CASE FILE / {project.category.toUpperCase()}</p><h1>{project.title[en?'en':'ar']}</h1><p>{project.summary[en?'en':'ar']}</p><div className="tag-row">{project.stack.map(x=><span key={x}>{x}</span>)}</div></header><section className="detail-block"><h2>{t.problem}</h2><p>{project.problem[en?'en':'ar']}</p></section><section className="detail-block"><h2>{t.solution}</h2><p>{project.solution[en?'en':'ar']}</p></section><section className="detail-block"><h2>{t.stack}</h2><p>{project.stack.join(' · ')}</p></section><p className="small-note" style={{marginTop:24}}>{t.sampleNote}</p></article></div>}
