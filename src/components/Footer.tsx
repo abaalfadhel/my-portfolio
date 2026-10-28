@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { getCopy, type Locale } from '@/lib/i18n';
+export default function Footer({ locale }: { locale: Locale }) { const t=getCopy(locale); return <footer className="site-footer"><div className="footer-top"><Link href={`/${locale}`} className="brand"><span className="brand-mark">龍</span><span className="brand-name">DIGITAL<span>FORGE</span></span></Link><p>{t.footer}</p><Link href={`/${locale}/contact`} className="footer-link">{t.contactCta} ↗</Link></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Digital Forge</span><span>DESIGNED FOR IDEAS THAT MATTER</span><Link href={`/${locale==='ar'?'en':'ar'}`}>{locale==='ar'?'English':'العربية'}</Link></div></footer>; }
